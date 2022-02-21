@@ -25,10 +25,61 @@ After installing extra dependencies in the `<PROJECT>/test` directory, the unit-
 1. What are your results for ten complex functions?
    - Did all methods (tools vs. manual count) get the same result?
    - Are the results clear?
+
+First we counted the cyclomatic complexity of functions in Three.js using [lizard](https://github.com/terryyin/lizard). The tool produced these results:
+
+```
+LOC  CCN  Name
+301  146  WebGLProgram@382-888@three.js/src/renderers/webgl/WebGLProgram.js
+153  119  parse@54-295@three.js/src/loaders/MaterialLoader.js
+137  110  convert@7-253@three.js/src/renderers/webgl/WebGLUtils.js
+138  107  toJSON@161-385@three.js/src/materials/Material.js
+170  88   setProgram@1432-1756@three.js/src/renderers/WebGLRenderer.js
+164  69   parseObject@711-1061@three.js/src/loaders/ObjectLoader.js
+168  59   uploadTexture@661-1004@three.js/src/renderers/webgl/WebGLTextures.js
+118  57   getProgramCacheKeyBooleans@351-474@three.js/src/renderers/webgl/WebGLPrograms.js
+120  44   toJSON@629-869@three.js/src/core/Object3D.js
+148  40   addShape@67-685@three.js/src/geometries/ExtrudeGeometry.js
+```
+
+We decided to count the cyclomatic complexity of the bottom 2 functions by hand:
+
+```
+Adam:
+CCN   Name
+40    toJSON@629-869@three.js/src/core/Object3D.js
+39    addShape@67-685@three.js/src/geometries/ExtrudeGeometry.js
+
+Zino:
+CCN   Name
+40    toJSON@629-869@three.js/src/core/Object3D.js
+37    addShape@67-685@three.js/src/geometries/ExtrudeGeometry.js
+```
+
+We did not get the exact same results, but we came quite close. We agreed on what to count and not to count. For instance, we count `if`s, and `else-if`s, as well as `for`, `while` and other control flow statements. We do not count inline function definitions, as we could not find enough information on whether these are useful to include, and their code is not executed as part of the run of the main function.
+
+The results of the tool are quite similar, but we might have missed some branches that should actually be included, or the tool is including something it shouldn't. We were unsure about wether to add inline function definitions. Adding these would increase the CCN more than the current difference between our measurement and the measurements of the tool.
+
 2. Are the functions just complex, or also long?
-3. What is the purpose of the functions?
+
+One of the functions (`addShape@67-685@three.js/src/geometries/ExtrudeGeometry.js`) is very long and also has a large CCN. Most of the complexity come from loops, which are manipulating vertecies in the shape.
+The other function (`toJSON@629-869@three.js/src/core/Object3D.js`) generally has very small branches (many oneliners/ternary expressions) and is therefore not as long, while having a similar CCN.
+
+3. What is the purpose of the functions? Is it related to the high CC?
+
+The purpose of `toJSON@Object3D.js` is to convert a 3D object to JSON, which means that the function is testing all properties of the 3d-object and applying them to a json object, and so naturally this function has a large amount of if-statements and thus CCN for its LOC.
+
+The purpose of `addShape@67-685@three.js/src/geometries/ExtrudeGeometry.js` is to create a data object for applying transformations. Most of the complexity of this function comes from iterating through these vertecies in order to create this data object.
+
 4. Are exceptions taken into account in the given measurements?
-5. Is the documentation clear w.r.t. all the possible outcomes?
+
+No try-catch blocks were found in these functions, but they are supported by the JavaScript programming language. The documentation for the code complexity tool (lizard) is not very clear on whether try-except blocks are included in the CCN, although they probably should.
+
+If we think of an exception as a possible branch, the ammuont of possible branches should scale linearly with the number of lines of code which are able to raise exceptions.
+
+5. Is the documentation of the function clear about the different possible outcomes induced by different branches taken?
+
+No, the functions are generally not very clear about the possible outcomes by different branches. Some more complex branches have explanations, while simpler branches are self-explanatory. Most branches of medium complexity remain undocumented, and it is not immediately clear what happens if any branch is or is not taken.
 
 ## Refactoring
 
