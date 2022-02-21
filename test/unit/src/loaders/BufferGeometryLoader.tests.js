@@ -2,7 +2,7 @@
 
 import { BufferAttribute } from '../../../../src/core/BufferAttribute.js';
 import { BufferGeometry } from '../../../../src/core/BufferGeometry.js';
-import { BufferGeometryLoader } from '../../../../src/loaders/BufferGeometryLoader.js';
+import { BufferGeometryLoader, takenBranches } from '../../../../src/loaders/BufferGeometryLoader.js';
 import { DynamicDrawUsage } from '../../../../src/constants.js';
 
 export default QUnit.module( 'Loaders', () => {
@@ -51,6 +51,28 @@ export default QUnit.module( 'Loaders', () => {
 				geometry2.getAttribute( 'attr' ),
 				'Serialized attribute can be deserialized correctly.'
 			);
+
+		} );
+
+		QUnit.done( ( _ ) => {
+
+			setTimeout( () => {
+
+				// print out branch coverage stats
+				console.log(
+					'(BufferGeometryLoader) taken branches: ' + takenBranches.size,
+					'(BufferGeometryLoader) taken percentage: ' + takenBranches.size / 41,
+					takenBranches
+				);
+
+				console.log(
+					'(BufferGeometryLoader) not taken branches: ',
+					Array.from( Array( 41 ).keys() )
+						.map( ( e ) => e + 1 )
+						.filter( ( e ) => ! takenBranches.has( e ) )
+				);
+
+			}, 2000 );
 
 		} );
 

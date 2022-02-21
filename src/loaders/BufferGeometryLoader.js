@@ -213,13 +213,10 @@ class BufferGeometryLoader extends Loader {
 
 		}
 
+
 		if ( ! enteredFor ) {
 
 			takenBranches.add( 16 );
-
-		} else {
-
-			takenBranches.add( 17 );
 
 		}
 
@@ -291,8 +288,6 @@ class BufferGeometryLoader extends Loader {
 
 					takenBranches.add( 25 );
 
-				} else {
-
 				}
 
 				geometry.morphAttributes[ key ] = array;
@@ -302,9 +297,6 @@ class BufferGeometryLoader extends Loader {
 			if ( ! forEntered ) {
 
 				takenBranches.add( 26 );
-
-			} else {
-
 
 			}
 
