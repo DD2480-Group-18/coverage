@@ -6,27 +6,25 @@ has to be delivered in a standard, cross-platform format.
 
 ## Project
 
-Name:
+Name: Three.js
 
-URL:
+URL: https://github.com/mrdoob/three.js/
 
-One or two sentences describing it
+Three.js is an easy to use, lightweight, cross-browser, general purpose 3D library.
 
 ## Onboarding experience
 
-Did it build and run as documented?
-    
-See the assignment for details; if everything works out of the box,
-there is no need to write much here. If the first project(s) you picked
-ended up being unsuitable, you can describe the "onboarding experience"
-for each project, along with reason(s) why you changed to a different one.
+Three.js was easy to build. The usages of the three.js project and it's internals are [well-documented online](https://threejs.org/docs/), but most (if not all) units of code in the repository lacks comments.
 
+The three.js project was easily built in it's entirety without errors using the build command `npm run build`. All examples used for testing was also easily built using `npm run build-examples`. The project was built using rollup.
+
+After installing extra dependencies in the `<PROJECT>/test` directory, the unit-tests can be ran. Running e2e tests with `npm run test-e2e` requires chrome or a similar browser, since e2e tests use puppeteer which is running a headless chromium browser instance.
 
 ## Complexity
 
 1. What are your results for ten complex functions?
-   * Did all methods (tools vs. manual count) get the same result?
-   * Are the results clear?
+   - Did all methods (tools vs. manual count) get the same result?
+   - Are the results clear?
 2. Are the functions just complex, or also long?
 3. What is the purpose of the functions?
 4. Are exceptions taken into account in the given measurements?
