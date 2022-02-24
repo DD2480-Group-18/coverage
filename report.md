@@ -90,19 +90,6 @@ No, the functions are generally not very clear about the possible outcomes by di
 
 #### Object3D.js
 
-taken branches: `20`
-
-taken branches percentage: `48.78%`
-
-IDs of taken branches: 
-
-```[2, 3, 5, 7, 9, 11, 13, 15, 27, 29, 33, 34, 35, 39, 41, 4, 10, 12, 14, 37]```
-
-IDs of _not taken_ branches: 
-
-```[1, 6, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31, 32, 36, 38, 40]```
-#### BufferGeometryLoader.js
-
 taken branches: `33`
 
 taken branches percentage: `44.59%`
@@ -114,6 +101,20 @@ IDs of taken branches:
 IDs of _not taken_ branches: 
 
 ```[11, 13, 17, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 39, 40, 41, 43, 44, 45, 46, 47, 51, 53, 54, 55, 58, 60, 62, 64, 66, 68, 70, 72]```
+
+#### BufferGeometryLoader.js
+
+taken branches: `20`
+
+taken branches percentage: `48.78%`
+
+IDs of taken branches: 
+
+```[2, 3, 5, 7, 9, 11, 13, 15, 27, 29, 33, 34, 35, 39, 41, 4, 10, 12, 14, 37]```
+
+IDs of _not taken_ branches: 
+
+```[1, 6, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31, 32, 36, 38, 40]```
 
 #### Quality of the DIY coverage measurement
 
