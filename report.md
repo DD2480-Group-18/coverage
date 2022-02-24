@@ -81,6 +81,52 @@ If we think of an exception as a possible branch, the ammuont of possible branch
 
 No, the functions are generally not very clear about the possible outcomes by different branches. Some more complex branches have explanations, while simpler branches are self-explanatory. Most branches of medium complexity remain undocumented, and it is not immediately clear what happens if any branch is or is not taken.
 
+
+## Coverage measurement & improvement
+
+### DIY coverage measurement results
+
+#### Object3D.js
+
+taken branches: `20`
+
+taken branches percentage: `48.78%`
+
+IDs of taken branches: 
+
+```[2, 3, 5, 7, 9, 11, 13, 15, 27, 29, 33, 34, 35, 39, 41, 4, 10, 12, 14, 37]```
+
+IDs of _not taken_ branches: 
+
+```[1, 6, 8, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 28, 30, 31, 32, 36, 38, 40]```
+#### BufferGeometryLoader.js
+
+taken branches: `33`
+
+taken branches percentage: `44.59%`
+
+IDs of taken branches: 
+
+```[1, 3, 5, 7, 9, 12, 14, 15, 18, 22, 38, 42, 48, 49, 50, 2, 4, 6, 8, 10, 16, 52, 56, 74, 57, 59, 61, 63, 65, 67, 69, 71, 73]```
+
+IDs of _not taken_ branches: 
+
+```[11, 13, 17, 19, 20, 21, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 39, 40, 41, 43, 44, 45, 46, 47, 51, 53, 54, 55, 58, 60, 62, 64, 66, 68, 70, 72]```
+
+#### Quality of the DIY coverage measurement
+
+##### Quality
+The quality of the coverage measurement is both objective and subjective. Things like ternary operators are hard to measure as only one expression is allowed within a ternary expression.
+We replaced ternary expressions with `if-else` clauses, that way we were able to mark branches as reached.
+Exceptions could be taken into account in a similar way, by adding one flag-ID operation after every exception-inducing line in the `try-clause`, but fortunately the functions that we chose to measure did not include any `try-catch` clauses.
+We also take into account that a function could be called by other tests than its own main test, and therefore the entire test suite might increase branch coverage. We do this by keeping the reached branches in a globally reachable array, 
+and letting the _entire_ test suite finish before printing out the contents of the array.
+
+##### Limitations
+The limitations of our program is that it is completely manually done, and we could therefore miss things that an automated program would not.
+If the program is changed, by for instance changing where branches appear or adding new branches, our coverage measurement would be wrong as the amount of branches and the flagging of reached branches have been manually inserted.
+To allow for changes in the program while keeping coverage measurement functional, we would need to automatize the flag-insertion process.
+
 ## Refactoring
 
 Plan for refactoring complex code:
