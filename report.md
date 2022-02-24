@@ -84,6 +84,8 @@ No, the functions are generally not very clear about the possible outcomes by di
 
 ## Coverage measurement & improvement
 
+> DIY coverage measurement is done in the `f/diy` branch.
+
 ### DIY coverage measurement results
 
 #### Object3D.js
