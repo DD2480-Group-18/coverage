@@ -165,6 +165,19 @@ Plan for refactoring complex code:
 The functions in the Three.JS project all follow a similar pattern. They are too long, and have a lot of nested branches and functions.
 The plan is therefore to break out functionality into functions where possible in order to reduce the length of the functions, and ultimately the CCN.
 
+### Refactored functions@files
+
+```
+parse@BufferGeometryLoader.js
+toJSON@Object3D.js 
+toJSON@Material.js 
+parseObject@ObjectLoader.js
+```
+
+The plan was followed exactly, these functions could all be simplified by breaking out parts that were clearly modularizable.
+In some cases, the CCN could be reduced dramatically, as tens of functions were created instead of having all the same statements in one single function.
+
+
 ## Self-assessment: Way of working
 
 Current state according to the Essence standard: ...
