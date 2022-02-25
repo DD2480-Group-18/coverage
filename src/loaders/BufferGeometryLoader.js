@@ -64,8 +64,7 @@ class BufferGeometryLoader extends Loader {
 
 		function getInterleavedBuffer( json, uuid ) {
 
-			if ( interleavedBufferMap[ uuid ] !== undefined )
-				return interleavedBufferMap[ uuid ];
+			if ( interleavedBufferMap[ uuid ] !== undefined ) return interleavedBufferMap[ uuid ];
 
 			const interleavedBuffers = json.interleavedBuffers;
 			const interleavedBuffer = interleavedBuffers[ uuid ];
@@ -97,113 +96,44 @@ class BufferGeometryLoader extends Loader {
 
 		}
 
-		let geometry;
-		if ( json.isInstancedBufferGeometry ) {
-
-			takenBranches.add( 1 );
-			geometry = new InstancedBufferGeometry();
-
-		} else {
-
-			takenBranches.add( 2 );
-			geometry = new BufferGeometry();
-
-		}
+		const geometry = json.isInstancedBufferGeometry ? new InstancedBufferGeometry() : new BufferGeometry();
 
 		const index = json.data.index;
 
 		if ( index !== undefined ) {
 
-			takenBranches.add( 3 );
 			const typedArray = getTypedArray( index.type, index.array );
 			geometry.setIndex( new BufferAttribute( typedArray, 1 ) );
-
-		} else {
-
-			takenBranches.add( 4 );
 
 		}
 
 		const attributes = json.data.attributes;
 
-		let enteredFor = false;
 		for ( const key in attributes ) {
 
-			takenBranches.add( 5 );
-			enteredFor = true;
 			const attribute = attributes[ key ];
 			let bufferAttribute;
 
 			if ( attribute.isInterleavedBufferAttribute ) {
 
-				takenBranches.add( 6 );
-				const interleavedBuffer = getInterleavedBuffer(
-					json.data,
-					attribute.data
-				);
-				bufferAttribute = new InterleavedBufferAttribute(
-					interleavedBuffer,
-					attribute.itemSize,
-					attribute.offset,
-					attribute.normalized
-				);
+				const interleavedBuffer = getInterleavedBuffer( json.data, attribute.data );
+				bufferAttribute = new InterleavedBufferAttribute( interleavedBuffer, attribute.itemSize, attribute.offset, attribute.normalized );
 
 			} else {
 
-				takenBranches.add( 7 );
 				const typedArray = getTypedArray( attribute.type, attribute.array );
-				let bufferAttributeConstr;
-				if ( attribute.isInstancedBufferAttribute ) {
-
-					takenBranches.add( 8 );
-					bufferAttributeConstr = InstancedBufferAttribute;
-
-				} else {
-
-					takenBranches.add( 9 );
-					bufferAttributeConstr = BufferAttribute;
-
-				}
-
-				bufferAttribute = new bufferAttributeConstr(
-					typedArray,
-					attribute.itemSize,
-					attribute.normalized
-				);
+				const bufferAttributeConstr = attribute.isInstancedBufferAttribute ? InstancedBufferAttribute : BufferAttribute;
+				bufferAttribute = new bufferAttributeConstr( typedArray, attribute.itemSize, attribute.normalized );
 
 			}
 
-			if ( attribute.name !== undefined ) {
-
-				takenBranches.add( 10 );
-				bufferAttribute.name = attribute.name;
-
-			} else {
-
-				takenBranches.add( 11 );
-
-			}
-
-			if ( attribute.usage !== undefined ) {
-
-				takenBranches.add( 12 );
-				bufferAttribute.setUsage( attribute.usage );
-
-			} else {
-
-				takenBranches.add( 13 );
-
-			}
+			if ( attribute.name !== undefined ) bufferAttribute.name = attribute.name;
+			if ( attribute.usage !== undefined ) bufferAttribute.setUsage( attribute.usage );
 
 			if ( attribute.updateRange !== undefined ) {
 
-				takenBranches.add( 14 );
 				bufferAttribute.updateRange.offset = attribute.updateRange.offset;
 				bufferAttribute.updateRange.count = attribute.updateRange.count;
-
-			} else {
-
-				takenBranches.add( 15 );
 
 			}
 
@@ -211,80 +141,35 @@ class BufferGeometryLoader extends Loader {
 
 		}
 
-
-		if ( ! enteredFor ) {
-
-			takenBranches.add( 16 );
-
-		}
-
 		const morphAttributes = json.data.morphAttributes;
 
 		if ( morphAttributes ) {
 
-			takenBranches.add( 18 );
-
-			let forEntered = false;
 			for ( const key in morphAttributes ) {
 
-				takenBranches.add( 19 );
-				forEntered = true;
 				const attributeArray = morphAttributes[ key ];
 
 				const array = [];
 
-				let forEntered2 = false;
 				for ( let i = 0, il = attributeArray.length; i < il; i ++ ) {
 
-					takenBranches.add( 20 );
-					forEntered2 = true;
 					const attribute = attributeArray[ i ];
 					let bufferAttribute;
 
 					if ( attribute.isInterleavedBufferAttribute ) {
 
-						takenBranches.add( 21 );
-						const interleavedBuffer = getInterleavedBuffer(
-							json.data,
-							attribute.data
-						);
-						bufferAttribute = new InterleavedBufferAttribute(
-							interleavedBuffer,
-							attribute.itemSize,
-							attribute.offset,
-							attribute.normalized
-						);
+						const interleavedBuffer = getInterleavedBuffer( json.data, attribute.data );
+						bufferAttribute = new InterleavedBufferAttribute( interleavedBuffer, attribute.itemSize, attribute.offset, attribute.normalized );
 
 					} else {
 
-						takenBranches.add( 22 );
 						const typedArray = getTypedArray( attribute.type, attribute.array );
-						bufferAttribute = new BufferAttribute(
-							typedArray,
-							attribute.itemSize,
-							attribute.normalized
-						);
+						bufferAttribute = new BufferAttribute( typedArray, attribute.itemSize, attribute.normalized );
 
 					}
 
-					if ( attribute.name !== undefined ) {
-
-						takenBranches.add( 23 );
-						bufferAttribute.name = attribute.name;
-
-					} else {
-
-						takenBranches.add( 24 );
-
-					}
-
+					if ( attribute.name !== undefined ) bufferAttribute.name = attribute.name;
 					array.push( bufferAttribute );
-
-				}
-
-				if ( ! forEntered2 ) {
-
-					takenBranches.add( 25 );
 
 				}
 
@@ -292,28 +177,13 @@ class BufferGeometryLoader extends Loader {
 
 			}
 
-			if ( ! forEntered ) {
-
-				takenBranches.add( 26 );
-
-			}
-
-		} else {
-
-			takenBranches.add( 27 );
-
 		}
 
 		const morphTargetsRelative = json.data.morphTargetsRelative;
 
 		if ( morphTargetsRelative ) {
 
-			takenBranches.add( 28 );
 			geometry.morphTargetsRelative = true;
-
-		} else {
-
-			takenBranches.add( 29 );
 
 		}
 
@@ -321,28 +191,13 @@ class BufferGeometryLoader extends Loader {
 
 		if ( groups !== undefined ) {
 
-			takenBranches.add( 30 );
-
-			let forEntered = false;
 			for ( let i = 0, n = groups.length; i !== n; ++ i ) {
 
-				takenBranches.add( 31 );
-				forEntered = true;
 				const group = groups[ i ];
 
 				geometry.addGroup( group.start, group.count, group.materialIndex );
 
 			}
-
-			if ( ! forEntered ) {
-
-				takenBranches.add( 32 );
-
-			}
-
-		} else {
-
-			takenBranches.add( 33 );
 
 		}
 
@@ -350,49 +205,20 @@ class BufferGeometryLoader extends Loader {
 
 		if ( boundingSphere !== undefined ) {
 
-			takenBranches.add( 34 );
 			const center = new Vector3();
 
 			if ( boundingSphere.center !== undefined ) {
 
-				takenBranches.add( 35 );
 				center.fromArray( boundingSphere.center );
-
-			} else {
-
-				takenBranches.add( 36 );
 
 			}
 
 			geometry.boundingSphere = new Sphere( center, boundingSphere.radius );
 
-		} else {
-
-			takenBranches.add( 37 );
-
 		}
 
-		if ( json.name ) {
-
-			takenBranches.add( 38 );
-			geometry.name = json.name;
-
-		} else {
-
-			takenBranches.add( 39 );
-
-		}
-
-		if ( json.userData ) {
-
-			takenBranches.add( 40 );
-			geometry.userData = json.userData;
-
-		} else {
-
-			takenBranches.add( 41 );
-
-		}
+		if ( json.name ) geometry.name = json.name;
+		if ( json.userData ) geometry.userData = json.userData;
 
 		return geometry;
 
