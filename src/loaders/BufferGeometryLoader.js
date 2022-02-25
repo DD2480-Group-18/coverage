@@ -10,8 +10,6 @@ import { InterleavedBufferAttribute } from '../core/InterleavedBufferAttribute.j
 import { InterleavedBuffer } from '../core/InterleavedBuffer.js';
 import { getTypedArray } from '../utils.js';
 
-export const takenBranches = new Set();
-
 class BufferGeometryLoader extends Loader {
 
 	constructor( manager ) {
