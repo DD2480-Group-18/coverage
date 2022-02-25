@@ -158,30 +158,7 @@ class Material extends EventDispatcher {
 
 	}
 
-	toJSON( meta ) {
-
-		const isRootObject = ( meta === undefined || typeof meta === 'string' );
-
-		if ( isRootObject ) {
-
-			meta = {
-				textures: {},
-				images: {}
-			};
-
-		}
-
-		const data = {
-			metadata: {
-				version: 4.5,
-				type: 'Material',
-				generator: 'Material.toJSON'
-			}
-		};
-
-		// standard Material serialization
-		data.uuid = this.uuid;
-		data.type = this.type;
+	setBaseValues( data ) {
 
 		if ( this.name !== '' ) data.name = this.name;
 
@@ -200,6 +177,11 @@ class Material extends EventDispatcher {
 		if ( this.specularIntensity !== undefined ) data.specularIntensity = this.specularIntensity;
 		if ( this.specularColor && this.specularColor.isColor ) data.specularColor = this.specularColor.getHex();
 		if ( this.shininess !== undefined ) data.shininess = this.shininess;
+
+	}
+
+	setClearCoatValues( data, meta ) {
+
 		if ( this.clearcoat !== undefined ) data.clearcoat = this.clearcoat;
 		if ( this.clearcoatRoughness !== undefined ) data.clearcoatRoughness = this.clearcoatRoughness;
 
@@ -221,6 +203,10 @@ class Material extends EventDispatcher {
 			data.clearcoatNormalScale = this.clearcoatNormalScale.toArray();
 
 		}
+
+	}
+
+	setMapValues( data, meta ) {
 
 		if ( this.map && this.map.isTexture ) data.map = this.map.toJSON( meta ).uuid;
 		if ( this.matcap && this.matcap.isTexture ) data.matcap = this.matcap.toJSON( meta ).uuid;
@@ -291,6 +277,11 @@ class Material extends EventDispatcher {
 
 		if ( this.transmission !== undefined ) data.transmission = this.transmission;
 		if ( this.transmissionMap && this.transmissionMap.isTexture ) data.transmissionMap = this.transmissionMap.toJSON( meta ).uuid;
+
+	}
+
+	setColorValues( data, meta ) {
+
 		if ( this.thickness !== undefined ) data.thickness = this.thickness;
 		if ( this.thicknessMap && this.thicknessMap.isTexture ) data.thicknessMap = this.thicknessMap.toJSON( meta ).uuid;
 		if ( this.attenuationDistance !== undefined ) data.attenuationDistance = this.attenuationDistance;
@@ -306,6 +297,38 @@ class Material extends EventDispatcher {
 
 		if ( this.opacity < 1 ) data.opacity = this.opacity;
 		if ( this.transparent === true ) data.transparent = this.transparent;
+
+	}
+
+	toJSON( meta ) {
+
+		const isRootObject = ( meta === undefined || typeof meta === 'string' );
+
+		if ( isRootObject ) {
+
+			meta = {
+				textures: {},
+				images: {}
+			};
+
+		}
+
+		const data = {
+			metadata: {
+				version: 4.5,
+				type: 'Material',
+				generator: 'Material.toJSON'
+			}
+		};
+
+		// standard Material serialization
+		data.uuid = this.uuid;
+		data.type = this.type;
+
+		this.setBaseValues( data );
+		this.setClearCoatValues( data, meta );
+		this.setMapValues( data, meta );
+		this.setColorValues( data, meta );
 
 		data.depthFunc = this.depthFunc;
 		data.depthTest = this.depthTest;
