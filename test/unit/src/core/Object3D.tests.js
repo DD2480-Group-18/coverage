@@ -17,6 +17,40 @@ const matrixEquals4 = (a, b) => {
 	return true;
 };
 
+// added helper function to setup Object3D for toJSON tests
+const getBaseObject3DSetup = () => {
+	var a = new Object3D();
+	a.name = "a's name";
+	a.matrix.set(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+	a.visible = false;
+	a.castShadow = true;
+	a.receiveShadow = true;
+	a.userData["foo"] = "bar";
+	return a;
+};
+
+// added helper function to get base Object3D output for toJSOn tests
+const getBaseJSONOutput = () => {
+	return {
+		metadata: {
+			version: 4.5,
+			type: "Object",
+			generator: "Object3D.toJSON",
+		},
+		object: {
+			uuid: "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2",
+			type: "Object3D",
+			name: "a's name",
+			castShadow: true,
+			receiveShadow: true,
+			visible: false,
+			userData: { foo: "bar" },
+			layers: 1,
+			matrix: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+		},
+	};
+};
+
 export default QUnit.module("Core", () => {
 	QUnit.module("Object3D", () => {
 		var RadToDeg = 180 / Math.PI;
@@ -1098,38 +1132,20 @@ export default QUnit.module("Core", () => {
 		});
 
 		QUnit.test("toJSON", (assert) => {
-			var a = new Object3D();
+			var a = getBaseObject3DSetup();
 			var child = new Object3D();
 			var childChild = new Object3D();
-
-			a.name = "a's name";
-			a.matrix.set(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-			a.visible = false;
-			a.castShadow = true;
-			a.receiveShadow = true;
-			a.userData["foo"] = "bar";
 
 			child.uuid = "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD";
 			childChild.uuid = "B43854B3-E970-4E85-BD41-AAF8D7BFA189";
 			child.add(childChild);
 			a.add(child);
 
-			var gold = {
-				metadata: {
-					version: 4.5,
-					type: "Object",
-					generator: "Object3D.toJSON",
-				},
+			var expected = getBaseJSONOutput();
+			expected = {
+				...expected,
 				object: {
-					uuid: "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2",
-					type: "Object3D",
-					name: "a's name",
-					castShadow: true,
-					receiveShadow: true,
-					visible: false,
-					userData: { foo: "bar" },
-					layers: 1,
-					matrix: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+					...expected.object,
 					children: [
 						{
 							uuid: "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD",
@@ -1153,47 +1169,19 @@ export default QUnit.module("Core", () => {
 			var out = a.toJSON();
 			out.object.uuid = "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2";
 
-			assert.deepEqual(out, gold, "JSON is as expected");
+			assert.deepEqual(out, expected, "JSON is as expected");
 		});
 
-		// added test #1 (additionally takes branch  11, 13, 17, 19 in toJson@Object3D.js)
-		QUnit.test("toJSON without children and extra branches taken", (assert) => {
-			var a = new Object3D();
+		// added test #1 (additionally takes branch 11 in toJson@Object3D.js)
+		QUnit.test("toJSON without children", (assert) => {
+			var a = getBaseObject3DSetup();
 
-			a.name = "a's name";
-			a.matrix.set(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-			a.visible = false;
-			a.castShadow = true;
-			a.receiveShadow = true;
-			a.userData["foo"] = "bar";
-
-			// defines properties to take additional branches
-			a.frustumCulled = false;
-			a.renderOrder = 5;
-			a.matrixAutoUpdate = false;
-			a.images = [1];
-			a.shapes = [1];
-			a.skeletons = [1];
-
-			var gold = {
-				metadata: {
-					version: 4.5,
-					type: "Object",
-					generator: "Object3D.toJSON",
-				},
+			var expected = getBaseJSONOutput();
+			expected = {
+				...expected,
 				object: {
-					uuid: "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2",
-					type: "Object3D",
-					name: "a's name",
-					castShadow: true,
-					receiveShadow: true,
+					...expected.object,
 					visible: false,
-					frustumCulled: false,
-					renderOrder: 5,
-					userData: { foo: "bar" },
-					layers: 1,
-					matrix: [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-					matrixAutoUpdate: false,
 				},
 			};
 
@@ -1201,8 +1189,180 @@ export default QUnit.module("Core", () => {
 			var out = a.toJSON();
 			out.object.uuid = "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2";
 
-			assert.deepEqual(out, gold, "JSON is as expected");
+			assert.deepEqual(out, expected, "JSON is as expected");
 		});
+
+		// added test #2 (additionally takes branches 13, 17 in toJson@Object3D.js)
+		QUnit.test("toJSON with extra render properties set", (assert) => {
+			var a = getBaseObject3DSetup();
+			var child = new Object3D();
+			var childChild = new Object3D();
+
+			child.uuid = "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD";
+			childChild.uuid = "B43854B3-E970-4E85-BD41-AAF8D7BFA189";
+			child.add(childChild);
+			a.add(child);
+
+			// defines properties to take additional branches
+			a.frustumCulled = false;
+			a.renderOrder = 5;
+			a.matrixAutoUpdate = false;
+
+			var expected = getBaseJSONOutput();
+			expected = {
+				...expected,
+				object: {
+					...expected.object,
+					matrixAutoUpdate: false,
+					visible: false,
+					frustumCulled: false,
+					renderOrder: 5,
+					children: [
+						{
+							uuid: "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD",
+							type: "Object3D",
+							layers: 1,
+							matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+							children: [
+								{
+									uuid: "B43854B3-E970-4E85-BD41-AAF8D7BFA189",
+									type: "Object3D",
+									layers: 1,
+									matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+								},
+							],
+						},
+					],
+				},
+			};
+
+			// hacks
+			var out = a.toJSON();
+			out.object.uuid = "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2";
+
+			assert.deepEqual(out, expected, "JSON is as expected");
+		});
+
+		// added test #3 (additionally takes branches 39, 41, 43, 44, 45 in toJson@Object3D.js)
+		QUnit.test("toJSON with meta properties set", (assert) => {
+			var a = getBaseObject3DSetup();
+			var child = new Object3D();
+			var childChild = new Object3D();
+
+			child.uuid = "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD";
+			childChild.uuid = "B43854B3-E970-4E85-BD41-AAF8D7BFA189";
+			child.add(childChild);
+			a.add(child);
+
+			// set extra properties
+			a.isSkinnedMesh = true;
+			a.bindMatrix = {};
+			a.bindMatrix.toArray = () => [1, 2, 3];
+
+			let materialItem = { i: "1" };
+			materialItem.toJSON = () => {
+				return {};
+			};
+			a.material = [materialItem];
+
+			var expected = getBaseJSONOutput();
+			expected = {
+				...expected,
+				object: {
+					...expected.object,
+					visible: false,
+					bindMode: undefined,
+					bindMatrix: [1, 2, 3],
+					material: [undefined],
+					children: [
+						{
+							uuid: "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD",
+							type: "Object3D",
+							layers: 1,
+							matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+							children: [
+								{
+									uuid: "B43854B3-E970-4E85-BD41-AAF8D7BFA189",
+									type: "Object3D",
+									layers: 1,
+									matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+								},
+							],
+						},
+					],
+				},
+			};
+
+			delete expected.metadata;
+
+			var meta = {
+				skeletons: {},
+				materials: [1, 2, 3],
+			};
+
+			// hacks
+			var out = a.toJSON(meta);
+			out.object.uuid = "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2";
+
+			assert.deepEqual(out, expected, "JSON is as expected");
+		});
+
+		// added test #4 (additionally takes branches 31, 37, 58 in toJson@Object3D.js)
+		QUnit.test(
+			"toJSON with Object3D as a line and geometries defined",
+			(assert) => {
+				var a = getBaseObject3DSetup();
+				var child = new Object3D();
+				var childChild = new Object3D();
+
+				child.uuid = "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD";
+				childChild.uuid = "B43854B3-E970-4E85-BD41-AAF8D7BFA189";
+				child.add(childChild);
+				a.add(child);
+
+				// defines properties to take additional branches
+				a.isLine = true;
+				a.geometry = {};
+				a.geometry.toJSON = () => {
+					return {};
+				};
+
+				var expected = getBaseJSONOutput();
+				expected = {
+					...expected,
+					geometries: [{}],
+					object: {
+						...expected.object,
+						visible: false,
+						geometry: undefined,
+						children: [
+							{
+								uuid: "5D4E9AE8-DA61-4912-A575-71A5BE3D72CD",
+								type: "Object3D",
+								layers: 1,
+								matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+								children: [
+									{
+										uuid: "B43854B3-E970-4E85-BD41-AAF8D7BFA189",
+										type: "Object3D",
+										layers: 1,
+										matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+									},
+								],
+							},
+						],
+					},
+				};
+
+				// hacks
+				var out = a.toJSON();
+				out.object.uuid = "0A1E4F43-CB5B-4097-8F82-DC2969C0B8C2";
+
+				console.log("hah", takenBranches);
+
+				assert.deepEqual(out, expected, "JSON is as expected");
+			}
+		);
 
 		QUnit.test("clone", (assert) => {
 			var a;
