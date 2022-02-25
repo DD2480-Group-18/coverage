@@ -169,14 +169,22 @@ The plan is therefore to break out functionality into functions where possible i
 
 ```
 parse@BufferGeometryLoader.js
-toJSON@Object3D.js 
-toJSON@Material.js 
+toJSON@Object3D.js
+toJSON@Material.js
 parseObject@ObjectLoader.js
 ```
 
 The plan was followed exactly, these functions could all be simplified by breaking out parts that were clearly modularizable.
 In some cases, the CCN could be reduced dramatically, as tens of functions were created instead of having all the same statements in one single function.
 
+### Refactoring CCN improvements
+
+```
+parse@BufferGeometryLoader.js went from CCN=23 to CCN=6 (65% improvement)
+toJSON@Object3D.js went from CCN=44 to CCN=16 (63% improvement)
+toJSON@Material.js went from CCN=107 to CCN=28 (73% improvement)
+parseObject@ObjectLoader.js went from CCN=69 to CCN=29 (57% improvement)
+```
 
 ## Self-assessment: Way of working
 
