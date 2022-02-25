@@ -188,19 +188,16 @@ parseObject@ObjectLoader.js went from CCN=69 to CCN=29 (57% improvement)
 
 ## Self-assessment: Way of working
 
-Current state according to the Essence standard: ...
+The current state according to the Essence standard is "In Place".
+We have thus progressed from "In Use" to the next level, since all team members are now part of using the way-of-working.
 
-Was the self-assessment unanimous? Any doubts about certain items?
-
-How have you improved so far?
-
-Where is potential for improvement?
+To improve our way-of-working, we need to more consistently apply the way-of-working in a way that fits all team members. That means communicating more clearly when to do work, and which work to do. Although team members can now be trusted to do their work, it is not certain _when_ they will do it. This means we need to adapt the way-of-working while the work progresses and reevaluate tools and communications to better fit us. Currently, we still "think about" the practices, which one should not actively do in the "Working Well" state.
 
 ## Overall experience
 
-What are your main take-aways from this project? What did you learn?
+The main take-away from this project is that a large project with many dependents can very well exist and work well without full test coverage. While three.js has OK coverage, most of the tests are lazily made and do not test functionality properly and seem to be made to pass.
 
-Is there something special you want to mention here?
+Although we managed to write the tests for P+, testing is hard and often requires deep knowledge about the project, which we did not have.
 
 ## P+
 
