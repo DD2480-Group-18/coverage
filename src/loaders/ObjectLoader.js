@@ -760,72 +760,16 @@ class ObjectLoader extends Loader {
 
 		}
 
-		function getTexture( uuid ) {
-
-			if ( textures[ uuid ] === undefined ) {
-
-				console.warn( 'THREE.ObjectLoader: Undefined texture', uuid );
-
-			}
-
-			return textures[ uuid ];
-
-		}
-
 		let geometry, material;
 
 		switch ( data.type ) {
 
 			case 'Scene':
-
-				object = new Scene();
-
-				if ( data.background !== undefined ) {
-
-					if ( Number.isInteger( data.background ) ) {
-
-						object.background = new Color( data.background );
-
-					} else {
-
-						object.background = getTexture( data.background );
-
-					}
-
-				}
-
-				if ( data.environment !== undefined ) {
-
-					object.environment = getTexture( data.environment );
-
-				}
-
-				if ( data.fog !== undefined ) {
-
-					if ( data.fog.type === 'Fog' ) {
-
-						object.fog = new Fog( data.fog.color, data.fog.near, data.fog.far );
-
-					} else if ( data.fog.type === 'FogExp2' ) {
-
-						object.fog = new FogExp2( data.fog.color, data.fog.density );
-
-					}
-
-				}
-
+				object = this.handleScene( data, object, textures );
 				break;
 
 			case 'PerspectiveCamera':
-
-				object = new PerspectiveCamera( data.fov, data.aspect, data.near, data.far );
-
-				if ( data.focus !== undefined ) object.focus = data.focus;
-				if ( data.zoom !== undefined ) object.zoom = data.zoom;
-				if ( data.filmGauge !== undefined ) object.filmGauge = data.filmGauge;
-				if ( data.filmOffset !== undefined ) object.filmOffset = data.filmOffset;
-				if ( data.view !== undefined ) object.view = Object.assign( {}, data.view );
-
+				object = this.handlePerspectiveCamera( data, object );
 				break;
 
 			case 'OrthographicCamera':
@@ -972,6 +916,90 @@ class ObjectLoader extends Loader {
 
 		object.uuid = data.uuid;
 
+		this.setMatrixProperties( data, object );
+
+		this.setRenderProperties( data, object, geometries, materials, textures, animations );
+
+		this.addChildren( data, object, geometries, materials, textures, animations );
+
+		this.setAnimations( data, object, animations );
+
+		this.setLOD( data, object );
+
+		return object;
+
+	}
+
+	getTexture( uuid, textures ) {
+
+		if ( textures[ uuid ] === undefined ) {
+
+			console.warn( 'THREE.ObjectLoader: Undefined texture', uuid );
+
+		}
+
+		return textures[ uuid ];
+
+	}
+
+	handlePerspectiveCamera( data, object ) {
+
+		object = new PerspectiveCamera( data.fov, data.aspect, data.near, data.far );
+
+		if ( data.focus !== undefined ) object.focus = data.focus;
+		if ( data.zoom !== undefined ) object.zoom = data.zoom;
+		if ( data.filmGauge !== undefined ) object.filmGauge = data.filmGauge;
+		if ( data.filmOffset !== undefined ) object.filmOffset = data.filmOffset;
+		if ( data.view !== undefined ) object.view = Object.assign( {}, data.view );
+
+		return object;
+
+	}
+
+	handleScene( data, object, textures ) {
+
+		object = new Scene();
+
+		if ( data.background !== undefined ) {
+
+			if ( Number.isInteger( data.background ) ) {
+
+				object.background = new Color( data.background );
+
+			} else {
+
+				object.background = this.getTexture( data.background, textures );
+
+			}
+
+		}
+
+		if ( data.environment !== undefined ) {
+
+			object.environment = this.getTexture( data.environment, textures );
+
+		}
+
+		if ( data.fog !== undefined ) {
+
+			if ( data.fog.type === 'Fog' ) {
+
+				object.fog = new Fog( data.fog.color, data.fog.near, data.fog.far );
+
+			} else if ( data.fog.type === 'FogExp2' ) {
+
+				object.fog = new FogExp2( data.fog.color, data.fog.density );
+
+			}
+
+		}
+
+		return object;
+
+	}
+
+	setMatrixProperties( data, object ) {
+
 		if ( data.name !== undefined ) object.name = data.name;
 
 		if ( data.matrix !== undefined ) {
@@ -990,6 +1018,10 @@ class ObjectLoader extends Loader {
 
 		}
 
+	}
+
+	setRenderProperties( data, object, geometries, materials, textures, animations ) {
+
 		if ( data.castShadow !== undefined ) object.castShadow = data.castShadow;
 		if ( data.receiveShadow !== undefined ) object.receiveShadow = data.receiveShadow;
 
@@ -999,7 +1031,7 @@ class ObjectLoader extends Loader {
 			if ( data.shadow.normalBias !== undefined ) object.shadow.normalBias = data.shadow.normalBias;
 			if ( data.shadow.radius !== undefined ) object.shadow.radius = data.shadow.radius;
 			if ( data.shadow.mapSize !== undefined ) object.shadow.mapSize.fromArray( data.shadow.mapSize );
-			if ( data.shadow.camera !== undefined ) object.shadow.camera = this.parseObject( data.shadow.camera );
+			if ( data.shadow.camera !== undefined ) object.shadow.camera = this.parseObject( data.shadow.camera, geometries, materials, textures, animations );
 
 		}
 
@@ -1008,6 +1040,10 @@ class ObjectLoader extends Loader {
 		if ( data.renderOrder !== undefined ) object.renderOrder = data.renderOrder;
 		if ( data.userData !== undefined ) object.userData = data.userData;
 		if ( data.layers !== undefined ) object.layers.mask = data.layers;
+
+	}
+
+	addChildren( data, object, geometries, materials, textures, animations ) {
 
 		if ( data.children !== undefined ) {
 
@@ -1020,6 +1056,10 @@ class ObjectLoader extends Loader {
 			}
 
 		}
+
+	}
+
+	setAnimations( data, object, animations ) {
 
 		if ( data.animations !== undefined ) {
 
@@ -1034,6 +1074,10 @@ class ObjectLoader extends Loader {
 			}
 
 		}
+
+	}
+
+	setLOD( data, object ) {
 
 		if ( data.type === 'LOD' ) {
 
@@ -1055,8 +1099,6 @@ class ObjectLoader extends Loader {
 			}
 
 		}
-
-		return object;
 
 	}
 
