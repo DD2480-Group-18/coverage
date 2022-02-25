@@ -130,6 +130,23 @@ The limitations of our program is that it is completely manually done, and we co
 If the program is changed, by for instance changing where branches appear or adding new branches, our coverage measurement would be wrong as the amount of branches and the flagging of reached branches have been manually inserted.
 To allow for changes in the program while keeping coverage measurement functional, we would need to automatize the flag-insertion process.
 
+
+### Coverage Improvement Results
+
+`Object3D.tests.js` as well as `BufferGeometryLoader.tests.js` in the branch `f/coverage-improvement` contain the changes to improve coverage.
+Four additional tests have been added for each function, which are clearly marked with comments above the added unit tests. To find them, simply navigate to the test file in question and search for `// added test #`.
+
+Shared setup has been broken into functions in the test files, as adding more unit tests for these kinds of functions usually means a lot of repeated code.
+
+#### Object3D.js
+
+taken branches: `44` (improved from `33`)
+
+taken branches percentage: `59.46%` (improved from `44.59%`)
+
+IDs of additionally taken branches: 
+```[11, 13, 17, 39, 41, 43, 44, 45, 31, 37, 58]```
+
 ## Refactoring
 
 Plan for refactoring complex code:
