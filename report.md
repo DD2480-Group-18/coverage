@@ -134,7 +134,9 @@ To allow for changes in the program while keeping coverage measurement functiona
 ### Coverage Improvement Results
 
 `Object3D.tests.js` as well as `BufferGeometryLoader.tests.js` in the branch `f/coverage-improvement` contain the changes to improve coverage.
-Four additional tests have been added for each function, which are clearly marked with comments above the added unit tests. To find them, simply navigate to the test file in question and search for `// added test #`.
+Four additional tests have been added for each function, which are clearly marked with comments above the added unit tests. To find them, simply navigate to the test file in question and search for `// added test #`. 
+
+Number of test cases added: four per member (P+).
 
 Shared setup has been broken into functions in the test files, as adding more unit tests for these kinds of functions usually means a lot of repeated code.
 
@@ -151,55 +153,8 @@ IDs of additionally taken branches:
 
 Plan for refactoring complex code:
 
-Estimated impact of refactoring (lower CC, but other drawbacks?).
-
-Carried out refactoring (optional, P+):
-
-git diff ...
-
-## Coverage
-
-### Tools
-
-Document your experience in using a "new"/different coverage tool.
-
-How well was the tool documented? Was it possible/easy/difficult to
-integrate it with your build environment?
-
-### Your own coverage tool
-
-Show a patch (or link to a branch) that shows the instrumented code to
-gather coverage measurements.
-
-The patch is probably too long to be copied here, so please add
-the git command that is used to obtain the patch instead:
-
-git diff ...
-
-What kinds of constructs does your tool support, and how accurate is
-its output?
-
-### Evaluation
-
-1. How detailed is your coverage measurement?
-
-2. What are the limitations of your own tool?
-
-3. Are the results of your tool consistent with existing coverage tools?
-
-## Coverage improvement
-
-Show the comments that describe the requirements for the coverage.
-
-Report of old coverage: [link]
-
-Report of new coverage: [link]
-
-Test cases added:
-
-git diff ...
-
-Number of test cases added: two per team member (P) or at least four (P+).
+The functions in the Three.JS project all follow a similar pattern. They are too long, and have a lot of nested branches and functions.
+The plan is therefore to break out functionality into functions where possible in order to reduce the length of the functions, and ultimately the CCN.
 
 ## Self-assessment: Way of working
 
@@ -216,3 +171,10 @@ Where is potential for improvement?
 What are your main take-aways from this project? What did you learn?
 
 Is there something special you want to mention here?
+
+## P+
+
+- We have carried out the refactoring (see `f/refactoring`)
+- We have written four new unit tests each (see `f/coverage-improvement`) 
+- We are using issues and systematic commit messages (linked to issues) to manage this project
+
