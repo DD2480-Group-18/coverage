@@ -149,6 +149,15 @@ taken branches percentage: `59.46%` (improved from `44.59%`)
 IDs of additionally taken branches: 
 ```[11, 13, 17, 39, 41, 43, 44, 45, 31, 37, 58]```
 
+#### BufferGeometryLoader.js
+
+taken branches: `28` (improved from `20`)
+
+taken branches percentage: `68.29%` (improved from `48.78%`)
+
+IDs of additionally taken branches:
+```[16, 18, 26, 30, 32, 38, 40, 28]```
+
 ## Refactoring
 
 Plan for refactoring complex code:
